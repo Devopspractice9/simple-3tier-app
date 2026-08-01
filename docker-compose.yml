@@ -3,9 +3,9 @@ services:
   frontend:
     build: ./frontend
     ports:
-      - "8081:80"  # Changed 8080:80 to 8081:80
-  depends_on:
-    - backend
+      - "8081:80"
+    depends_on:
+      - backend
 
   # Tier 2: Application Layer
   backend:
