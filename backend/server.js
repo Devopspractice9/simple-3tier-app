@@ -1,12 +1,17 @@
 const express = require('express');
+const cors = require('cors');
 const { Pool } = require('pg');
 
 const app = express();
+
+// Allow Cross-Origin Requests from Frontend
+app.use(cors());
+
 const pool = new Pool({
-  user: process.env.POSTGRES_USER || 'postgres',
+  user: process.env.POSTGRES_USER || 'devuser',
   host: process.env.POSTGRES_HOST || 'db',
-  database: process.env.POSTGRES_DB || 'mydb',
-  password: process.env.POSTGRES_PASSWORD || 'postgres',
+  database: process.env.POSTGRES_DB || 'devdb',
+  password: process.env.POSTGRES_PASSWORD || 'devpassword',
   port: 5432,
 });
 
