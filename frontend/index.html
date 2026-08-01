@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
-<head><title>3-Tier App</title></head>
+<head>
+  <title>3-Tier App</title>
+</head>
 <body>
   <h1>Three-Tier App Demo</h1>
   <button onclick="fetchData()">Get Data from Backend</button>
@@ -8,9 +10,15 @@
 
   <script>
     async function fetchData() {
-      const res = await fetch('http://localhost:5000/api/data');
-      const data = await res.json();
-      document.getElementById('output').innerText = JSON.stringify(data);
+      try {
+        // Dynamic host automatically targets your EC2 Public IP on port 5000
+        const host = window.location.hostname;
+        const res = await fetch(`http://${host}:5000/api/data`);
+        const data = await res.json();
+        document.getElementById('output').innerText = JSON.stringify(data, null, 2);
+      } catch (err) {
+        document.getElementById('output').innerText = "Error: " + err.message;
+      }
     }
   </script>
 </body>
