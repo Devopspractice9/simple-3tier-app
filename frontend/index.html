@@ -1,25 +1,87 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>3-Tier App</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Three-Tier Architecture Application</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      max-width: 500px;
+      width: 100%;
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    pre {
+      background: #272c34;
+      color: #8af;
+      padding: 15px;
+      border-radius: 5px;
+      text-align: left;
+      margin-top: 20px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+  </style>
 </head>
 <body>
-  <h1>Three-Tier App Demo</h1>
-  <button onclick="fetchData()">Get Data from Backend</button>
-  <p id="output"></p>
+
+  <div class="container">
+    <h1>Three-Tier App Demo</h1>
+    <p>Click below to fetch real-time data from PostgreSQL via Node.js backend.</p>
+    <button onclick="fetchData()">Get Data from Backend</button>
+    <pre id="output">Output will appear here...</pre>
+  </div>
 
   <script>
     async function fetchData() {
+      const outputElem = document.getElementById('output');
+      outputElem.innerText = "Connecting to backend API...";
+      
       try {
-        // Dynamic host automatically targets your EC2 Public IP on port 5000
+        // Automatically uses current host IP (EC2 or localhost)
         const host = window.location.hostname;
-        const res = await fetch(`http://${host}:5000/api/data`);
-        const data = await res.json();
-        document.getElementById('output').innerText = JSON.stringify(data, null, 2);
+        const response = await fetch(`http://${host}:5000/api/data`);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP Error! Status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        outputElem.innerText = JSON.stringify(data, null, 2);
       } catch (err) {
-        document.getElementById('output').innerText = "Error: " + err.message;
+        outputElem.innerText = "Error: " + err.message + "\n\nMake sure port 5000 is open in AWS Security Group Inbound Rules.";
       }
     }
   </script>
+
 </body>
 </html>
